@@ -1,10 +1,15 @@
+import ProvidersWrapper from '../ProvidersWrapper';
+import ChessBoard from '../ChessBoard';
+
 import './App.css'
 
 function App() {
     return (
-        <div className="App">
-            <h1>Hello</h1>
-        </div>
+        <ProvidersWrapper>
+            <div className="App">
+                <ChessBoard />
+            </div>
+        </ProvidersWrapper>
     );
 };
 

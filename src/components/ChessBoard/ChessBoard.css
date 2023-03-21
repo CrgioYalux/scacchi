@@ -1,0 +1,44 @@
+.ChessBoard {
+    height: 75vh;
+    width: 75vh;
+    aspect-ratio: 1;
+
+    outline: 2px solid var(--brand-color-l-low);
+    outline-offset: 5px;
+
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.ChessBoard__Row {
+    flex: 0 0 calc(100 / 8 * 1%);
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.ChessBoard__Square {
+    flex: 0 0 calc(100 / 8 * 1%);
+    aspect-ratio: 1;
+
+    display: grid;
+    place-items: center;
+}
+
+
+.ChessBoard__Square:nth-child(2n) {
+    background-color: white;
+    color: black;
+}
+
+.ChessBoard__Row:nth-child(2n) > .ChessBoard__Square:nth-child(2n + 1) {
+    background-color: white;
+    color: black;
+}
+
+.ChessBoard__Row:nth-child(2n) > .ChessBoard__Square:nth-child(2n) {
+    background-color: black;
+    color: white;
+}
