@@ -6,6 +6,7 @@ import type { ChessBoard } from './utils';
 
 type ChessState = {
     chessBoard: ChessBoard,
+    turn: 0 | 1,
 };
 
 type ChessActions = {
@@ -17,14 +18,18 @@ type UseChessState = [
     actions: ChessActions,
 ];
 
+
+
 function useChess(): UseChessState {
     const [chessBoard, setChessBoard] = useState<ChessBoard>(() => createChessBoard());
+    const [turn, setTurn] = useState<0 | 1>(0);
 
     const move = (fromID: number, toID: number): boolean => {
         const fromPiece = findPiece(chessBoard, fromID);
         const toSquare = findSquare(chessBoard, toID);
 
         if (!fromPiece || !toSquare) return false;
+        if (fromPiece.from !== turn) return false;
         if (fromPiece.value === null) return false;
         if (fromPiece.from === toSquare.from) return false;
         if (!fromPiece.moves.find((m) => m.ID === toSquare.ID)) return false;
@@ -46,6 +51,7 @@ function useChess(): UseChessState {
         };
 
         setChessBoard(evaluateChessBoard(chessBoard));
+        setTurn((prev) => prev === 0 ? 1 : 0);
         return true;
     }
 
@@ -54,7 +60,7 @@ function useChess(): UseChessState {
     };
 
     return [
-        { chessBoard },
+        { chessBoard, turn },
         actions
     ];
 };

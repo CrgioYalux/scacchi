@@ -20,7 +20,8 @@ type ChessContext = {
 const Chess = createContext<ChessContext>({
     chess: {
         state: {
-            chessBoard: []
+            chessBoard: [],
+            turn: 0,
         },
         actions: {
             move: () => false,
@@ -51,7 +52,8 @@ const ChessProvider: React.FC<ChessProviderProps> = ({ children }) => {
 
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
-                if (state.chessBoard[i][j].ID === selectedPieceID) {
+                if (state.chessBoard[i][j].ID === selectedPieceID &&
+                    state.chessBoard[i][j].from === state.turn) {
                     out = state.chessBoard[i][j].moves.map((p) => p.ID);
                 }
             }
