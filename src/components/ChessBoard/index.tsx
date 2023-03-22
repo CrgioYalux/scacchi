@@ -11,17 +11,22 @@ const ChessBoard: React.FC<ChessBoardProps> = () => {
         <div className='ChessBoard'>
             {chess.state.chessBoard.map((row, i) => (
                 <div key={i} className='ChessBoard__Row'>
-                {row.map((square) => (
-                    <div 
-                        key={square.ID}
-                        className='ChessBoard__Square'
-                        onClick={() => context.actions.selectPiece(square.ID)}
-                        style={context.state.highlightedSquares.filter((id) => id === square.ID).length
-                        ? { outline: '2.5px dashed green', outlineOffset: '-5px' } : undefined}
-                    >
-                        {square.value}
-                    </div>
-                ))}
+                {row.map((square) => {
+                    const isHighlighted = context.state.highlightedSquares.filter((id) => id === square.ID).length === 1;
+                    return (
+                        <div 
+                            key={square.ID}
+                            className='ChessBoard__Square'
+                            onClick={() => {
+                                if (isHighlighted) context.actions.move(square.ID);
+                                else context.actions.selectPiece(square.ID)
+                            }}
+                            style={isHighlighted ? { outline: '2.5px dashed green', outlineOffset: '-5px' } : undefined}
+                        >
+                            {square.value && `${square.value}${square.from}`}
+                        </div>
+                    )
+                })}
                 </div>
             ))}
         </div>

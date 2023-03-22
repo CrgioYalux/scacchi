@@ -34,6 +34,12 @@ function pawnMoves(chessBoard: ChessBoard, squareID: number): ChessBoardSquare[]
             chessBoard[foundPiece.position.x + 1][foundPiece.position.y + 1].from !== foundPiece.from) {
             out.push(chessBoard[foundPiece.position.x + 1][foundPiece.position.y + 1]);
         }
+        if (chessBoard[foundPiece.position.x + 1] &&
+            chessBoard[foundPiece.position.x + 1][foundPiece.position.y - 1] &&
+            chessBoard[foundPiece.position.x + 1][foundPiece.position.y - 1].value !== null &&
+            chessBoard[foundPiece.position.x + 1][foundPiece.position.y - 1].from !== foundPiece.from) {
+            out.push(chessBoard[foundPiece.position.x + 1][foundPiece.position.y - 1]);
+        }
     }
     else {
         if (chessBoard[foundPiece.position.x - 1] &&
@@ -52,6 +58,12 @@ function pawnMoves(chessBoard: ChessBoard, squareID: number): ChessBoardSquare[]
             chessBoard[foundPiece.position.x - 1][foundPiece.position.y - 1].value !== null &&
             chessBoard[foundPiece.position.x - 1][foundPiece.position.y - 1].from !== foundPiece.from) {
             out.push(chessBoard[foundPiece.position.x - 1][foundPiece.position.y - 1]);
+        }
+        if (chessBoard[foundPiece.position.x - 1] &&
+            chessBoard[foundPiece.position.x - 1][foundPiece.position.y + 1] &&
+            chessBoard[foundPiece.position.x - 1][foundPiece.position.y + 1].value !== null &&
+            chessBoard[foundPiece.position.x - 1][foundPiece.position.y + 1].from !== foundPiece.from) {
+            out.push(chessBoard[foundPiece.position.x - 1][foundPiece.position.y + 1]);
         }
     }
     

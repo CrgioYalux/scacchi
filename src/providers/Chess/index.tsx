@@ -12,6 +12,7 @@ type ChessContext = {
         },
         actions: {
             selectPiece: (pieceID: number) => void,
+            move: (toID: number) => void,
         },
     }
 }
@@ -31,6 +32,7 @@ const Chess = createContext<ChessContext>({
         },
         actions: {
             selectPiece: () => {},
+            move: () => {},
         },
     },
 });
@@ -62,13 +64,22 @@ const ChessProvider: React.FC<ChessProviderProps> = ({ children }) => {
         setSelectedPieceID(pieceID);
     };
 
+    const move = (toID: number) => {
+        if (selectedPieceID === null) return;
+        actions.move(selectedPieceID, toID);
+        setSelectedPieceID(null);
+    };
+
     const value: ChessContext = {
         chess: {
             state, actions,
         },
         context: {
             state: { highlightedSquares },
-            actions: { selectPiece },
+            actions: { 
+                selectPiece,
+                move,
+            },
         },
     };
 

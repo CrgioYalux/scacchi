@@ -21,7 +21,30 @@ type ChessBoardSquare = {
 type ChessBoard = ChessBoardSquare[][];
 
 function evaluateChessBoard(chessBoard: ChessBoard): ChessBoard {
-    return [];
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            if (chessBoard[i][j].value === 'Rook') {
+                chessBoard[i][j].moves = moves.rook(chessBoard, chessBoard[i][j].ID);
+            }
+            else if (chessBoard[i][j].value === 'Knight') {
+                chessBoard[i][j].moves = moves.knight(chessBoard, chessBoard[i][j].ID);
+            }
+            else if (chessBoard[i][j].value === 'Bishop') {
+                chessBoard[i][j].moves = moves.bishop(chessBoard, chessBoard[i][j].ID);
+            }
+            else if (chessBoard[i][j].value === 'Queen') {
+                chessBoard[i][j].moves = moves.queen(chessBoard, chessBoard[i][j].ID);
+            }
+            else if (chessBoard[i][j].value === 'King') {
+                chessBoard[i][j].moves = moves.king(chessBoard, chessBoard[i][j].ID);
+            }
+            else {
+                chessBoard[i][j].moves = moves.pawn(chessBoard, chessBoard[i][j].ID);
+            }
+        }
+    }
+
+    return chessBoard;
 }
 
 function createChessBoard(): ChessBoard {
@@ -63,33 +86,8 @@ function createChessBoard(): ChessBoard {
         out.push(row);
     }
 
-    for (let i = 0; i < 8; i++) {
-        for (let j = 0; j < 8; j++) {
-            if (i === 0 || i === 7) {
-                if (out[i][j].value === 'Knight') {
-                    out[i][j].moves = moves.knight(out, out[i][j].ID);
-                }
-                else if (out[i][j].value === 'Rook') {
-                    out[i][j].moves = moves.rook(out, out[i][j].ID);
-                }
-                else if (out[i][j].value === 'Bishop') {
-                    out[i][j].moves = moves.bishop(out, out[i][j].ID);
-                }
-                else if (out[i][j].value === 'Queen') {
-                    out[i][j].moves = moves.queen(out, out[i][j].ID);
-                }
-                else if (out[i][j].value === 'King') {
-                    out[i][j].moves = moves.king(out, out[i][j].ID);
-                }
-            }
-            else if (i === 1 || i === 6) {
-                out[i][j].moves = moves.pawn(out, out[i][j].ID);
-            }
-        }
-    }
-
-    return out;
+    return evaluateChessBoard(out);
 };
 
 export type { Point, ChessBoardSquareValue, ChessBoardSquare, ChessBoard };
-export { createChessBoard };
+export { evaluateChessBoard, createChessBoard };
