@@ -5,14 +5,20 @@ import './ChessBoard.css';
 interface ChessBoardProps {};
 
 const ChessBoard: React.FC<ChessBoardProps> = () => {
-    const [state] = useChessProvider();
+    const { chess, context } = useChessProvider();
 
     return (
         <div className='ChessBoard'>
-            {state.chessBoard.map((row, i) => (
+            {chess.state.chessBoard.map((row, i) => (
                 <div key={i} className='ChessBoard__Row'>
                 {row.map((square) => (
-                    <div key={square.id} className='ChessBoard__Square'>
+                    <div 
+                        key={square.ID}
+                        className='ChessBoard__Square'
+                        onClick={() => context.actions.selectPiece(square.ID)}
+                        style={context.state.highlightedSquares.filter((id) => id === square.ID).length
+                        ? { outline: '2.5px dashed green', outlineOffset: '-5px' } : undefined}
+                    >
                         {square.value}
                     </div>
                 ))}
@@ -21,6 +27,5 @@ const ChessBoard: React.FC<ChessBoardProps> = () => {
         </div>
     );
 };
-
 
 export default ChessBoard;
