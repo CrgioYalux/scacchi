@@ -14,13 +14,16 @@ type ChessBoardSquare = {
     ID: number,
     position: Point,
     value: ChessBoardSquareValue,
-    moves: ChessBoardSquare[],
+    moves: number[],
     from: 0 | 1 | null,
 };
 
 type ChessBoard = ChessBoardSquare[][];
 
-function evaluateChessBoard(chessBoard: ChessBoard): ChessBoard {
+function evaluateChessBoard(chessBoard: ChessBoard, inCheck: ChessBoardSquare | null): ChessBoard {
+    const movesFrom0: number[] = [];
+    const movesFrom1: number[] = [];
+
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
             if (chessBoard[i][j].value === 'Rook') {
@@ -41,9 +44,17 @@ function evaluateChessBoard(chessBoard: ChessBoard): ChessBoard {
             else {
                 chessBoard[i][j].moves = moves.pawn(chessBoard, chessBoard[i][j].ID);
             }
+
+            if (chessBoard[i][j].from === 0) movesFrom0.push(...chessBoard[i][j].moves)
+            else movesFrom1.push(...chessBoard[i][j].moves)
         }
     }
 
+
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+        }
+    }
     return chessBoard;
 }
 
@@ -86,7 +97,7 @@ function createChessBoard(): ChessBoard {
         out.push(row);
     }
 
-    return evaluateChessBoard(out);
+    return evaluateChessBoard(out, null);
 };
 
 export type { Point, ChessBoardSquareValue, ChessBoardSquare, ChessBoard };

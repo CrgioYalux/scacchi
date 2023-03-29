@@ -15,6 +15,7 @@ const ChessBoard: React.FC<ChessBoardProps> = () => {
                     const isHighlighted = context.state.highlightedSquares.filter((id) => id === square.ID).length === 1;
                     return (
                         <div 
+                            data-id={square.ID}
                             key={square.ID}
                             className='ChessBoard__Square'
                             onClick={() => {

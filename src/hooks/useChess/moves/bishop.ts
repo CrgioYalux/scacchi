@@ -1,8 +1,8 @@
 import { findPiece } from "./utils";
 
-import type { ChessBoard, ChessBoardSquare } from "../utils";
+import type { ChessBoard } from "../utils";
 
-function bishopMoves(chessBoard: ChessBoard, squareID: number): ChessBoardSquare[] {
+function bishopMoves(chessBoard: ChessBoard, squareID: number): number[] {
     const foundPiece = findPiece(chessBoard, squareID);
     
     if (!foundPiece) {
@@ -13,14 +13,14 @@ function bishopMoves(chessBoard: ChessBoard, squareID: number): ChessBoardSquare
         return [];
     }
 
-    const out: ChessBoardSquare[] = [];
+    const out: number[] = [];
 
     for (let i = 1; i < 8; i++) {
         if (!chessBoard[foundPiece.position.x + i] ||
             !chessBoard[foundPiece.position.x + i][foundPiece.position.y + i] ||
             chessBoard[foundPiece.position.x + i][foundPiece.position.y + i].from === foundPiece.from) break;
 
-        out.push(chessBoard[foundPiece.position.x + i][foundPiece.position.y + i]);
+        out.push(chessBoard[foundPiece.position.x + i][foundPiece.position.y + i].ID);
 
         if (chessBoard[foundPiece.position.x + i][foundPiece.position.y + i].from !== null &&
             chessBoard[foundPiece.position.x + i][foundPiece.position.y + i].from !== foundPiece.from) break;
@@ -31,7 +31,7 @@ function bishopMoves(chessBoard: ChessBoard, squareID: number): ChessBoardSquare
             !chessBoard[foundPiece.position.x - i][foundPiece.position.y - i] || 
             chessBoard[foundPiece.position.x - i][foundPiece.position.y - i].from === foundPiece.from) break;
 
-        out.push(chessBoard[foundPiece.position.x - i][foundPiece.position.y - i]);
+        out.push(chessBoard[foundPiece.position.x - i][foundPiece.position.y - i].ID);
 
         if (chessBoard[foundPiece.position.x - i][foundPiece.position.y - i].from !== null &&
             chessBoard[foundPiece.position.x - i][foundPiece.position.y - i].from !== foundPiece.from) break;
@@ -42,7 +42,7 @@ function bishopMoves(chessBoard: ChessBoard, squareID: number): ChessBoardSquare
             !chessBoard[foundPiece.position.x + i][foundPiece.position.y - i] ||
             chessBoard[foundPiece.position.x + i][foundPiece.position.y - i].from === foundPiece.from) break;
 
-        out.push(chessBoard[foundPiece.position.x + i][foundPiece.position.y - i]);
+        out.push(chessBoard[foundPiece.position.x + i][foundPiece.position.y - i].ID);
 
         if (chessBoard[foundPiece.position.x + i][foundPiece.position.y - i].from !== null &&
             chessBoard[foundPiece.position.x + i][foundPiece.position.y - i].from !== foundPiece.from) break;
@@ -53,7 +53,7 @@ function bishopMoves(chessBoard: ChessBoard, squareID: number): ChessBoardSquare
             !chessBoard[foundPiece.position.x - i][foundPiece.position.y + i] ||
             chessBoard[foundPiece.position.x - i][foundPiece.position.y + i].from === foundPiece.from) break;
 
-        out.push(chessBoard[foundPiece.position.x - i][foundPiece.position.y + i]);
+        out.push(chessBoard[foundPiece.position.x - i][foundPiece.position.y + i].ID);
 
         if (chessBoard[foundPiece.position.x - i][foundPiece.position.y + i].from !== null &&
             chessBoard[foundPiece.position.x - i][foundPiece.position.y + i].from !== foundPiece.from) break;
