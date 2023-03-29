@@ -54,7 +54,7 @@ const ChessProvider: React.FC<ChessProviderProps> = ({ children }) => {
             for (let j = 0; j < 8; j++) {
                 if (state.chessBoard[i][j].ID === selectedPieceID &&
                     state.chessBoard[i][j].from === state.turn) {
-                    out = state.chessBoard[i][j].moves.map((p) => p.ID);
+                    out = state.chessBoard[i][j].moves;
                 }
             }
         }

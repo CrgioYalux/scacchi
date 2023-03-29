@@ -51,7 +51,7 @@ function piecePlacementDataToChessBoard(piecePlacementData: string): ChessBoard 
             if (j === pieces.length) break;
 
             const ID: number = usingNewIndex ? (i * 8 + newIndex) : (i * 8 + j);
-            const position: Point = { x: i, y: j };
+            const position: Point = usingNewIndex ? { x: i, y: newIndex } : { x: i, y: j };
             const moves: number[] = [];
             const from: 0 | 1 | null = isCharInUpperCase(pieces[j]) ? 0 : 1;
             const value: ChessBoardSquareValue = FENPieceToChessBoardSquareValue(pieces[j]) ?? null;
@@ -62,7 +62,7 @@ function piecePlacementDataToChessBoard(piecePlacementData: string): ChessBoard 
                 const emptySquares: ChessBoardSquare[] = new Array(numPieces).fill(null).map((v, k) => {
                     return {
                         ID: ID + k,
-                        position: { x: i, y: j + k },
+                        position: usingNewIndex ? { x: i, y: newIndex + k } : { x: i, y: k },
                         moves,
                         from: v,
                         value: v,

@@ -21,8 +21,9 @@ type UseChessState = [
 
 function useChess(): UseChessState {
     const [chessBoard, setChessBoard] = useState<ChessBoard>(() => {
-        const chess = FENToChess("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        // const chess = FENToChess("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         // const chess = FENToChess("rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2");
+        const chess = FENToChess("rnbqkbnr/8/8/3rR3/8/8/8/RNBQKBNR b KQkq - 1 2");
         if (!chess) return createChessBoard()
         else return chess.chessBoard;
     });

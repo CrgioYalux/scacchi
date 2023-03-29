@@ -16,6 +16,7 @@ const ChessBoard: React.FC<ChessBoardProps> = () => {
                     return (
                         <div 
                             data-id={square.ID}
+                            data-position={`${square.position.x}${square.position.y}`}
                             key={square.ID}
                             className='ChessBoard__Square'
                             onClick={() => {
