@@ -11,7 +11,7 @@ type ChessState = {
 };
 
 type ChessActions = {
-    move: (fromID: number, toID: number) => boolean;
+    move: (fromID: number, toID: number) => void;
 };
 
 type UseChessState = [
@@ -20,25 +20,33 @@ type UseChessState = [
 ];
 
 function useChess(): UseChessState {
-    const [chessBoard, setChessBoard] = useState<ChessBoard>(() => {
-        // const chess = FENToChess("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-        // const chess = FENToChess("rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2");
-        const chess = FENToChess("rnbqkbnr/8/8/3rR3/8/8/8/RNBQKBNR b KQkq - 1 2");
-        if (!chess) return createChessBoard()
-        else return chess.chessBoard;
-    });
+    const [chessBoard, setChessBoard] = useState<ChessBoard>(() => createChessBoard());
     const [turn, setTurn] = useState<0 | 1>(0);
     const [inCheck, setInCheck] = useState<ChessBoardSquare | null>(null);
+    const [errors, setErrors] = useState<string[]>([]);
 
-    const move = (fromID: number, toID: number): boolean => {
+    useEffect(() => {
+        // const chess = FENToChess("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        try {
+            const chess = FENToChess("8/8/8/3Qk3/3Kq3/8/8/8 b KQkq - 1 2");
+            if (chess) {
+                setChessBoard(chess.chessBoard);
+                setTurn(chess.activeColor === 'w' ? 0 : 1);
+            }
+        } catch (e) {
+            setErrors(prev => [...prev, 'Error parsing FEN: invalid FEN']);
+        }
+    }, []);
+
+    const move = (fromID: number, toID: number): void => {
         const fromPiece = findPiece(chessBoard, fromID);
         const toSquare = findSquare(chessBoard, toID);
 
-        if (!fromPiece || !toSquare) return false;
-        if (fromPiece.from !== turn) return false;
-        if (fromPiece.value === null) return false;
-        if (fromPiece.from === toSquare.from) return false;
-        if (!fromPiece.moves.find((ID) => ID === toSquare.ID)) return false;
+        if (!fromPiece || !toSquare) return;
+        if (fromPiece.from !== turn) return;
+        if (fromPiece.value === null) return;
+        if (fromPiece.from === toSquare.from) return;
+        if (!fromPiece.moves.find((ID) => ID === toSquare.ID)) return;
 
         chessBoard[toSquare.position.x][toSquare.position.y] = {
             ID: toSquare.ID,
@@ -58,7 +66,6 @@ function useChess(): UseChessState {
 
         setChessBoard(evaluateChessBoard(chessBoard, inCheck));
         setTurn((prev) => prev === 0 ? 1 : 0);
-        return true;
     };
 
     const actions: ChessActions = {
