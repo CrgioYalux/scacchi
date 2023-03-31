@@ -13,6 +13,7 @@ const ChessBoard: React.FC<ChessBoardProps> = () => {
                 <div key={i} className='ChessBoard__Row'>
                 {row.map((square) => {
                     const isHighlighted = context.state.highlightedSquares.filter((id) => id === square.ID).length === 1;
+                    const isInCheck = square.ID === chess.state.inCheck;
                     return (
                         <div 
                             data-id={square.ID}
@@ -23,7 +24,10 @@ const ChessBoard: React.FC<ChessBoardProps> = () => {
                                 if (isHighlighted) context.actions.move(square.ID);
                                 else context.actions.selectPiece(square.ID)
                             }}
-                            style={isHighlighted ? { outline: '2.5px dashed green', outlineOffset: '-5px' } : undefined}
+                            style={{
+                                ...isHighlighted ? { outline: '2.5px dashed green', outlineOffset: '-5px' } : undefined, 
+                                ...isInCheck ? { color: 'white', backgroundColor: 'rgba(240, 0, 0, .7)' } : undefined,
+                                }}
                         >
                             {square.value && `${square.value}${square.from}`}
                         </div>

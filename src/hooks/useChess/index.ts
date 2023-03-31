@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { evaluateChessBoard, createChessBoard } from './utils';
 import { findSquare, findPiece } from './moves/utils';
-import { FENToChess } from './parseFEN';
+import { FENToChessState } from './parseFEN';
 
 import type { ChessBoardSquare, ChessBoard } from './utils';
 
 type ChessState = {
     chessBoard: ChessBoard,
     turn: 0 | 1,
+    inCheck: number | null,
 };
 
 type ChessActions = {
@@ -22,16 +23,20 @@ type UseChessState = [
 function useChess(): UseChessState {
     const [chessBoard, setChessBoard] = useState<ChessBoard>(() => createChessBoard());
     const [turn, setTurn] = useState<0 | 1>(0);
-    const [inCheck, setInCheck] = useState<ChessBoardSquare | null>(null);
+    const [inCheck, setInCheck] = useState<number | null>(null);
     const [errors, setErrors] = useState<string[]>([]);
 
     useEffect(() => {
-        // const chess = FENToChess("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        // Class chess
+        // have a 64 size array with all updated pieces which allow to O(1) access pieces from ID,
+        // but also the matrix which helps me with ops and displaying
         try {
-            const chess = FENToChess("8/8/8/3Qk3/3Kq3/8/8/8 b KQkq - 1 2");
+            const chess = FENToChessState("8/8/8/3Qk3/3Kq3/8/8/8 b KQkq - 1 2");
+            // const chess = FENToChessState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
             if (chess) {
-                setChessBoard(chess.chessBoard);
-                setTurn(chess.activeColor === 'w' ? 0 : 1);
+                setChessBoard(chess.chessBoardState.chessBoard);
+                setTurn(chess.chessBoardState.turn);
+                setInCheck(chess.chessBoardState.inCheck);
             }
         } catch (e) {
             setErrors(prev => [...prev, 'Error parsing FEN: invalid FEN']);
@@ -64,8 +69,14 @@ function useChess(): UseChessState {
             value: null,
         };
 
-        setChessBoard(evaluateChessBoard(chessBoard, inCheck));
-        setTurn((prev) => prev === 0 ? 1 : 0);
+        const prevChess = evaluateChessBoard({ chessBoard, inCheck, turn });
+        const currChess = evaluateChessBoard({ chessBoard, inCheck, turn });
+
+        if (prevChess.inCheck === currChess.inCheck) return;
+
+        setChessBoard(currChess.chessBoard);
+        setTurn(currChess.turn);
+        setInCheck(currChess.inCheck);
     };
 
     const actions: ChessActions = {
@@ -73,7 +84,7 @@ function useChess(): UseChessState {
     };
 
     return [
-        { chessBoard, turn },
+        { chessBoard, turn, inCheck },
         actions
     ];
 };

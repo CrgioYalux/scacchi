@@ -1,4 +1,5 @@
-import { Point, ChessBoardSquare, ChessBoardSquareValue, ChessBoard, evaluateChessBoard } from './utils';
+import type { Point, ChessBoardSquare, ChessBoardSquareValue, ChessBoard, ChessBoardState } from './utils';
+import { evaluateChessBoard } from './utils';
 
 type CastingAvailability = {
     K: boolean,
@@ -6,15 +7,6 @@ type CastingAvailability = {
     k: boolean,
     q: boolean,
 }
-
-type Chess = {
-    chessBoard: ChessBoard,
-    activeColor: 'w' | 'b',
-    castingAvailability: CastingAvailability,
-    enPassantTargetSquare: string,
-    halfMoveClock: number,
-    fullMoveNumber: number,
-};
 
 function FENPieceToChessBoardSquareValue(FENPiece: string): ChessBoardSquareValue | undefined {
     if (FENPiece.toLowerCase() === 'r') return 'Rook'
@@ -129,8 +121,16 @@ function stringToCastingAvailability(str: string): CastingAvailability | undefin
     return { K, Q, k, q };
 }
 
-function FENToChess(FEN: string): Chess | undefined {
+type ChessState = {
+    chessBoardState: ChessBoardState,
+    activeColor: 'w' | 'b',
+    castingAvailability: CastingAvailability,
+    enPassantTargetSquare: string,
+    halfMoveClock: number,
+    fullMoveNumber: number,
+};
 
+function FENToChessState(FEN: string): ChessState | undefined {
     // FEN for a starting position 
     // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
 
@@ -141,7 +141,6 @@ function FENToChess(FEN: string): Chess | undefined {
 
     const piecePlacementDataParsed = piecePlacementDataToChessBoard(fields[0]);
     if (!piecePlacementDataParsed) return undefined;
-    const chessBoard = evaluateChessBoard(piecePlacementDataParsed, null);
 
     const activeColor = fields[1];
     if (!activeColor || (activeColor !== 'w' && activeColor !== 'b')) return undefined;
@@ -149,7 +148,6 @@ function FENToChess(FEN: string): Chess | undefined {
     const castingAvailability = stringToCastingAvailability(fields[2]);
     if (!castingAvailability) return undefined;
 
-    // const enPassantTargetSquare = fields[3];
     const enPassantTargetSquare = fields[3];
     if (!enPassantTargetSquare) return undefined;
 
@@ -159,8 +157,11 @@ function FENToChess(FEN: string): Chess | undefined {
     const fullMoveNumber = Number(fields[5]);
     if (isNaN(halfMoveClock)) return undefined;
 
+    const prevState = evaluateChessBoard({ chessBoard: piecePlacementDataParsed, inCheck: null, turn: activeColor === 'w' ? 0 : 1 });
+    const currState = evaluateChessBoard({ chessBoard: piecePlacementDataParsed, inCheck: prevState.inCheck, turn: activeColor === 'w' ? 0 : 1 });
+
     return {
-        chessBoard,
+        chessBoardState: currState,
         activeColor,
         castingAvailability,
         enPassantTargetSquare,
@@ -169,5 +170,5 @@ function FENToChess(FEN: string): Chess | undefined {
     };
 }
 
-export type { CastingAvailability, Chess };
-export { FENToChess };
+export type { CastingAvailability, ChessState };
+export { FENToChessState };
